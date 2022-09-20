@@ -79,7 +79,7 @@ namespace Kratos {
         //Get equivalent Shear Modulus
         const double my_shear_modulus = 0.5 * my_young / (1.0 + my_poisson);
         const double other_shear_modulus = 0.5 * other_young / (1.0 + other_poisson);
-        const double equiv_shear = 1.0 / ((2.0 - my_poisson)/my_shear_modulus + (2.0 - other_poisson)/other_shear_modulus);
+        const double equiv_shear = my_shear_modulus * other_shear_modulus / (other_shear_modulus + my_shear_modulus);
 
         double contact_area = 0.0;
         CalculateIndentedContactArea(radius, other_radius, indentation, contact_area);
@@ -219,12 +219,12 @@ namespace Kratos {
         const double walls_young         = wall->GetProperties()[YOUNG_MODULUS];
         const double my_poisson          = element->GetPoisson();
         const double walls_poisson       = wall->GetProperties()[POISSON_RATIO];
-        const double equiv_young         = my_young * walls_young / (walls_young * (1.0 - my_poisson * my_poisson) + my_young * (1.0 - walls_poisson * walls_poisson));
+        const double equiv_young         = my_young * walls_young / (walls_young + my_young);
 
         //Get equivalent Shear Modulus
         const double my_shear_modulus    = 0.5 * my_young / (1.0 + my_poisson);
         const double walls_shear_modulus = 0.5 * walls_young / (1.0 + walls_poisson);
-        const double equiv_shear         = 1.0 / ((2.0 - my_poisson)/my_shear_modulus + (2.0 - walls_poisson)/walls_shear_modulus);
+        const double equiv_shear = my_shear_modulus * walls_shear_modulus / (walls_shear_modulus + my_shear_modulus);
 
         double contact_area = 0.0;
         CalculateIndentedContactAreaWithFEM(radius, indentation, contact_area);
