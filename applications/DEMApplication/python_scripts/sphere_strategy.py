@@ -543,6 +543,17 @@ class ExplicitStrategy():
 
         return math.sqrt(1.0/(1.0 - (1.0+e)*(1.0+e) * math.exp(alpha)) - 1.0)
 
+    def GammaClassical(self, e):
+        if e < 0.001:
+            e = 0.001
+
+        if e > 0.999:
+            return 0.0
+
+        aux = math.log(e)
+
+        return -aux / math.sqrt(math.pi ** 2 + aux ** 2)
+
     @classmethod
     def SinAlphaConicalDamage(self, e):
 
@@ -650,6 +661,10 @@ class ExplicitStrategy():
 
             elif (type_of_law == 'Hertz'):
                 gamma = self.GammaForHertzThornton(coefficient_of_restitution)
+                write_gamma = True
+
+            elif (type_of_law == 'Stress_dependent'):
+                gamma = self.GammaClassical(coefficient_of_restitution)
                 write_gamma = True
 
             elif (type_of_law == 'Conical_damage'):
