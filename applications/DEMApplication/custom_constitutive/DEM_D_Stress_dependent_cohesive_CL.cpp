@@ -77,7 +77,7 @@ namespace Kratos {
         //Get equivalent Poisson
         const double my_poisson = element1->GetPoisson();
         const double other_poisson = element2->GetPoisson();
-        const double equiv_poisson = 0.5 * (my_poisson + other_poisson);
+        const double equiv_poisson = 2.0 * my_poisson * other_poisson / (my_poisson + other_poisson);
 
         double contact_area = 0.0;
         CalculateIndentedContactArea(radius, other_radius, indentation, contact_area);
