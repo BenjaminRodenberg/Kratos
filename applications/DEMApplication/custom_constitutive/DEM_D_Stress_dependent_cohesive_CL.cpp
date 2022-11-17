@@ -84,7 +84,7 @@ namespace Kratos {
 
         //Normal and Tangent elastic constants
         mKn = contact_area * equiv_young / (radius_sum - indentation);
-        mKt = mKn * (2.0 * (1.0 - equiv_poisson) / (2.0 - equiv_poisson));
+        mKt = 0.5 * mKn  / (1.0 + equiv_poisson);
 
         KRATOS_CATCH("")
     }
