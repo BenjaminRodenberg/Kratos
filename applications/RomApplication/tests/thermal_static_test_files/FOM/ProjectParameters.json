@@ -1,11 +1,10 @@
 {
-    "analysis_stage": "KratosMultiphysics.ConvectionDiffusionApplication.convection_diffusion_analysis",
     "problem_data": {
         "problem_name": "Square_Radiation_Stationary",
         "parallel_type": "OpenMP",
-        "time_step": 1.0,
+        "time_step": 0.01,
         "start_time": 0.0,
-        "end_time": 0.99,
+        "end_time": 1.0,
         "echo_level": 0
     },
     "solver_settings": {
@@ -40,7 +39,7 @@
             "ThermalFace2D_Right_Wall"
         ],
         "time_stepping": {
-            "time_step": 1.0
+            "time_step": 0.01
         },
         "element_replace_settings": {
             "element_name": "LaplacianElement",
@@ -56,7 +55,7 @@
                 "model_part_name" : "ThermalModelPart.HeatFlux2D_Top_Wall",
                 "variable_name"   : "FACE_HEAT_FLUX",
                 "constrained"     : false,
-                "value"           : 2000.0,
+                "value"           : "2000.0*t",
                 "interval"        : [0.0,"End"]
             }
         },{
@@ -66,7 +65,7 @@
                 "model_part_name" : "ThermalModelPart.HeatFlux2D_Bottom_Wall",
                 "variable_name"   : "FACE_HEAT_FLUX",
                 "constrained"     : false,
-                "value"           : 2000.0,
+                "value"           : "2000.0*t",
                 "interval"        : [0.0,"End"]
             }
         },{
@@ -107,8 +106,51 @@
         ]
     },
     "output_processes": {
-        "gid_output": [],
-        "vtk_output": []
+        "gid_output": [{
+            "python_module" : "gid_output_process",
+            "kratos_module" : "KratosMultiphysics",
+            "process_name"  : "GiDOutputProcess",
+            "help"          : "This process writes postprocessing files for GiD",
+            "Parameters"    : {
+                "model_part_name"        : "ThermalModelPart",
+                "output_name"            : "diffusion_test_primal",
+                "postprocess_parameters" : {
+                    "result_file_configuration" : {
+                        "gidpost_flags"       : {
+                            "GiDPostMode"           : "GiD_PostBinary",
+                            "WriteDeformedMeshFlag" : "WriteDeformed",
+                            "WriteConditionsFlag"   : "WriteConditions",
+                            "MultiFileFlag"         : "SingleFile"
+                        },
+                        "file_label"          : "time",
+                        "output_control_type" : "time",
+                        "output_interval"    : 0.01,
+                        "body_output"         : true,
+                        "node_output"         : false,
+                        "skin_output"         : false,
+                        "plane_output"        : [],
+                        "nodal_results"       : ["TEMPERATURE","HEAT_FLUX"],
+                        "gauss_point_results" : []
+                    },
+                    "point_data_configuration"  : []
+                }
+            }
+        }],
+        "vtk_output": [],
+        "rom_output": [{
+            "python_module" : "calculate_rom_basis_output_process",
+            "kratos_module" : "KratosMultiphysics.RomApplication",
+            "process_name"  : "CalculateRomBasisOutputProcess",
+            "Parameters": {
+            "model_part_name": "ThermalModelPart",
+            "snapshots_control_type": "step",
+            "snapshots_interval": 1.0,
+            "nodal_unknowns": ["TEMPERATURE"],
+            "rom_basis_output_format": "json",
+            "rom_basis_output_name": "RomParameters",
+            "svd_truncation_tolerance": 0.0
+            }
+        }]
     },
     "restart_options": {
         "SaveRestart": "False",

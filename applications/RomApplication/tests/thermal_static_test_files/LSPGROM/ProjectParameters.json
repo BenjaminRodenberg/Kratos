@@ -5,7 +5,7 @@
         "parallel_type": "OpenMP",
         "time_step": 1.0,
         "start_time": 0.0,
-        "end_time": 0.99,
+        "end_time": 1.0,
         "echo_level": 0
     },
     "solver_settings": {
@@ -40,7 +40,7 @@
             "ThermalFace2D_Right_Wall"
         ],
         "time_stepping": {
-            "time_step": 1.0
+            "time_step": 0.01
         },
         "element_replace_settings": {
             "element_name": "LaplacianElement",
@@ -56,7 +56,7 @@
                 "model_part_name" : "ThermalModelPart.HeatFlux2D_Top_Wall",
                 "variable_name"   : "FACE_HEAT_FLUX",
                 "constrained"     : false,
-                "value"           : -700.0,
+                "value"           : 2000.0,
                 "interval"        : [0.0,"End"]
             }
         },{
@@ -66,7 +66,7 @@
                 "model_part_name" : "ThermalModelPart.HeatFlux2D_Bottom_Wall",
                 "variable_name"   : "FACE_HEAT_FLUX",
                 "constrained"     : false,
-                "value"           : 700.0,
+                "value"           : 2000.0,
                 "interval"        : [0.0,"End"]
             }
         },{
@@ -76,7 +76,7 @@
                 "model_part_name" : "ThermalModelPart.ImposedTemperature2D_Left_Wall",
                 "variable_name"   : "TEMPERATURE",
                 "constrained"     : true,
-                "value"           : 90.0,
+                "value"           : 303.15,
                 "interval"        : [0.0,"End"]
             }
         },{
@@ -84,7 +84,7 @@
             "kratos_module" : "KratosMultiphysics.ConvectionDiffusionApplication",
             "Parameters"    : {
                 "model_part_name"        : "ThermalModelPart.ThermalFace2D_Right_Wall",
-                "ambient_temperature"    : 12.0,
+                "ambient_temperature"    : 283.15,
                 "add_ambient_radiation"  : true,
                 "emissivity"             : 0.8,
                 "add_ambient_convection" : true,

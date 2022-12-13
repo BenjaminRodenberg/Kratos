@@ -40,7 +40,7 @@ class TestThermalLSPGRom(KratosUnittest.TestCase):
             expected_output = np.load(expected_output_filename)
             obtained_output = rom_testing_utilities.GetScalarNodalResults(self.simulation._GetSolver().GetComputingModelPart(), KratosMultiphysics.TEMPERATURE)
             nodal_area = rom_testing_utilities.GetNodalAreaVector(self.simulation._GetSolver().GetComputingModelPart())
-            
+
             l2 = np.sqrt((sum(nodal_area*((1 - obtained_output/expected_output )**2)))/(sum(nodal_area)))*100
             self.assertLess(l2, self.relative_tolerance)
 

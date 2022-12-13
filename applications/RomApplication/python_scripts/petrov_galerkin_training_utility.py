@@ -3,7 +3,7 @@ import json
 import numpy as np
 import os
 import scipy.linalg
-from glob import glob 
+from glob import glob
 
 # Importing the Kratos Library
 import KratosMultiphysics
@@ -20,7 +20,7 @@ class PetrovGalerkinTrainingUtility(object):
     """Auxiliary utility for the Petrov Galerkin training.
     This class encapsulates all the functions required for the Petrov Galerkin training.
     These are snapshots collection for the basis Psi used for solving a Petrov Galerkin ROM.
-    The snapshots depends on the basis strategy (i.e. Projected_System or Assembled_Residuals).
+    The snapshots depends on the basis strategy (i.e. Jacobian or Residuals).
     """
 
     def __init__(self, solver, custom_settings):
@@ -55,7 +55,7 @@ class PetrovGalerkinTrainingUtility(object):
 
         # Generate the matrix of residuals
         if self.echo_level > 0 : KratosMultiphysics.Logger.PrintInfo("PetrovGalerkinTrainingUtility","Generating matrix of projected system.")
-        
+
         if self.basis_strategy=="Jacobian":
             snapshots_matrix = self.__rom_residuals_utility.GetProjectedGlobalLHS()
         elif self.basis_strategy=="Residuals":
@@ -77,14 +77,14 @@ class PetrovGalerkinTrainingUtility(object):
         # Calculate the new basis and save
         snapshots_basis = self.__CalculateResidualBasis()
         self.__AppendNewBasisToRomParameters(snapshots_basis)
-    
+
 
     @classmethod
     def __GetPetrovGalerkinTrainingDefaultSettings(cls):
         default_settings = KratosMultiphysics.Parameters("""{
                 "train": false,
-                "basis_strategy": "Assembled_Residuals",
-                "include_phi": true,
+                "basis_strategy": "Residuals",
+                "include_phi": false,
                 "svd_truncation_tolerance": 1.0e-4,
                 "echo_level": 0
         }""")
@@ -109,7 +109,7 @@ class PetrovGalerkinTrainingUtility(object):
             u = u_left
 
         return u
-    
+
     def __AppendNewBasisToRomParameters(self, u):
         petrov_galerkin_number_of_rom_dofs= np.shape(u)[1]
         n_nodal_unknowns = len(self.rom_settings["nodal_unknowns"].GetStringArray())
@@ -134,7 +134,7 @@ class PetrovGalerkinTrainingUtility(object):
         float_format = "{:.12f}"
         pretty_number = float(float_format.format(number))
         return pretty_number
-    
+
     def __GetGalerkinBasis(self):
         with open('RomParameters.json','r') as f:
             galerkin_rom_parameters = json.load(f)
@@ -144,13 +144,13 @@ class PetrovGalerkinTrainingUtility(object):
             N_Dofs_rom = galerkin_rom_parameters["rom_settings"]["number_of_rom_dofs"]
             u = np.zeros((N_Dofs,N_Dofs_rom))
             counter_in = 0
-            for key in galerkin_rom_parameters["nodal_modes"].keys(): 
+            for key in galerkin_rom_parameters["nodal_modes"].keys():
                 counter_fin = counter_in + N_Dof_per_node
                 u[counter_in:counter_fin,:] = np.array(galerkin_rom_parameters["nodal_modes"][key])
                 counter_in = counter_fin
-        
+
         return u
-    
+
     def __OrthogonalProjector(self, A, B):
         # A - B @(B.T @ A)
         BtA = B.T@A

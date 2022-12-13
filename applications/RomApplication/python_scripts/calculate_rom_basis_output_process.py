@@ -124,7 +124,7 @@ class CalculateRomBasisOutputProcess(KratosMultiphysics.OutputProcess):
             "train_petrov_galerkin": {
                 "train": False,
                 "basis_strategy": "Residuals",
-                "include_phi": True
+                "include_phi": False
             },
             "rom_settings": {},
             "hrom_settings": {},
