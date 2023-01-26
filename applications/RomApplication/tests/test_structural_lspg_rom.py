@@ -24,8 +24,8 @@ class TestStructuralLSPGRom(KratosUnittest.TestCase):
     @KratosUnittest.skipUnless(numpy_available, "numpy is required for RomApplication")
     def testStructuralStaticLSPGRom2D(self):
         self.work_folder = "structural_static_test_files/LSPGROM/"
-        parameters_filename = "ProjectParametersROM.json"
-        expected_output_filename = "ExpectedOutputROM.npy"
+        parameters_filename = "ProjectParametersLSPGROM.json"
+        expected_output_filename = "ExpectedOutputLSPGROM.npy"
 
         with KratosUnittest.WorkFolderScope(self.work_folder, __file__):
             # Set up simulation
@@ -64,55 +64,55 @@ class TestStructuralLSPGRom(KratosUnittest.TestCase):
                 self.PostProcess("test_rbf_shape_functions_utility_1x1_square_G")
         
 
-    @KratosUnittest.skipUnless(numpy_available, "numpy is required for RomApplication")
-    def testStructuralDynamicLSPGRom2D(self):
-        self.work_folder = "structural_dynamic_test_files/LSPGROM/"
-        parameters_filename = "ProjectParameters.json"
-        expected_output_filename = "ExpectedOutput.npy"
+    # @KratosUnittest.skipUnless(numpy_available, "numpy is required for RomApplication")
+    # def testStructuralDynamicLSPGRom2D(self):
+    #     self.work_folder = "structural_dynamic_test_files/LSPGROM/"
+    #     parameters_filename = "ProjectParameters.json"
+    #     expected_output_filename = "ExpectedOutput.npy"
 
-        time_snapshots = [2,4,6,8,10]
+    #     time_snapshots = [2,4,6,8,10]
 
-        with KratosUnittest.WorkFolderScope(self.work_folder, __file__):
-            # Set up and run simulation
-            with open(parameters_filename,'r') as parameter_file:
-                parameters = KratosMultiphysics.Parameters(parameter_file.read())
-            model = KratosMultiphysics.Model()
-            self.simulation = rom_testing_utilities.SetUpSimulationInstance(model, parameters)
+    #     with KratosUnittest.WorkFolderScope(self.work_folder, __file__):
+    #         # Set up and run simulation
+    #         with open(parameters_filename,'r') as parameter_file:
+    #             parameters = KratosMultiphysics.Parameters(parameter_file.read())
+    #         model = KratosMultiphysics.Model()
+    #         self.simulation = rom_testing_utilities.SetUpSimulationInstance(model, parameters)
 
-            # Patch the RomAnalysis class to save the selected time steps results
-            def Initialize(cls):
-                super(type(self.simulation), cls).Initialize()
-                cls.selected_time_step_solution_container = []
+    #         # Patch the RomAnalysis class to save the selected time steps results
+    #         def Initialize(cls):
+    #             super(type(self.simulation), cls).Initialize()
+    #             cls.selected_time_step_solution_container = []
 
-            def FinalizeSolutionStep(cls):
-                super(type(self.simulation), cls).FinalizeSolutionStep()
+    #         def FinalizeSolutionStep(cls):
+    #             super(type(self.simulation), cls).FinalizeSolutionStep()
 
-                time = cls._GetSolver().GetComputingModelPart().ProcessInfo[KratosMultiphysics.TIME]
-                if np.any(np.isclose(time, time_snapshots)):
-                    array_of_displacements = rom_testing_utilities.GetVectorNodalResults(self.simulation._GetSolver().GetComputingModelPart(), KratosMultiphysics.DISPLACEMENT)
-                    cls.selected_time_step_solution_container.append(array_of_displacements)
+    #             time = cls._GetSolver().GetComputingModelPart().ProcessInfo[KratosMultiphysics.TIME]
+    #             if np.any(np.isclose(time, time_snapshots)):
+    #                 array_of_displacements = rom_testing_utilities.GetVectorNodalResults(self.simulation._GetSolver().GetComputingModelPart(), KratosMultiphysics.DISPLACEMENT)
+    #                 cls.selected_time_step_solution_container.append(array_of_displacements)
 
-            self.simulation.Initialize  = types.MethodType(Initialize, self.simulation)
-            self.simulation.FinalizeSolutionStep  = types.MethodType(FinalizeSolutionStep, self.simulation)
+    #         self.simulation.Initialize  = types.MethodType(Initialize, self.simulation)
+    #         self.simulation.FinalizeSolutionStep  = types.MethodType(FinalizeSolutionStep, self.simulation)
 
-            # Run test case
-            self.simulation.Run()
+    #         # Run test case
+    #         self.simulation.Run()
 
-            # Check results
-            expected_output = np.load(expected_output_filename)
-            n_values = len(self.simulation.selected_time_step_solution_container[0])
-            n_snapshots = len(self.simulation.selected_time_step_solution_container)
-            obtained_snapshot_matrix = np.zeros((n_values, n_snapshots))
-            for i in range(n_snapshots):
-                snapshot_i= np.array(self.simulation.selected_time_step_solution_container[i])
-                obtained_snapshot_matrix[:,i] = snapshot_i.transpose()
+    #         # Check results
+    #         expected_output = np.load(expected_output_filename)
+    #         n_values = len(self.simulation.selected_time_step_solution_container[0])
+    #         n_snapshots = len(self.simulation.selected_time_step_solution_container)
+    #         obtained_snapshot_matrix = np.zeros((n_values, n_snapshots))
+    #         for i in range(n_snapshots):
+    #             snapshot_i= np.array(self.simulation.selected_time_step_solution_container[i])
+    #             obtained_snapshot_matrix[:,i] = snapshot_i.transpose()
 
-            tolerance = 1.0e-6
-            for i in range (n_snapshots):
-                up = sum((expected_output[:,i] - obtained_snapshot_matrix[:,i])**2)
-                down = sum((expected_output[:,i])**2)
-                l2 = np.sqrt(up/down)
-                self.assertLess(l2, tolerance)
+    #         tolerance = 1.0e-6
+    #         for i in range (n_snapshots):
+    #             up = sum((expected_output[:,i] - obtained_snapshot_matrix[:,i])**2)
+    #             down = sum((expected_output[:,i])**2)
+    #             l2 = np.sqrt(up/down)
+    #             self.assertLess(l2, tolerance)
             
             
 

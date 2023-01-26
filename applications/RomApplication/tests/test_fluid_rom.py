@@ -23,8 +23,8 @@ class TestFluidRom(KratosUnittest.TestCase):
     @KratosUnittest.skipUnless(numpy_available, "numpy is required for RomApplication")
     def testFluidRom2D(self):
         self.work_folder = "fluid_dynamics_test_files/ROM/"
-        parameters_filename = "ProjectParameters.json"
-        expected_output_filename = "ExpectedOutput.npy"
+        parameters_filename = "ProjectParametersROM.json"
+        expected_output_filename = "ExpectedOutputROM.npy"
 
         with KratosUnittest.WorkFolderScope(self.work_folder, __file__):
             # Set up simulation

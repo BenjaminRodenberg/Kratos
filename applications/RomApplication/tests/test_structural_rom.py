@@ -88,8 +88,8 @@ class TestStructuralRom(KratosUnittest.TestCase):
     @KratosUnittest.skipUnless(numpy_available, "numpy is required for RomApplication")
     def testStructuralDynamicRom2D(self):
         self.work_folder = "structural_dynamic_test_files/ROM/"
-        parameters_filename = "ProjectParameters.json"
-        expected_output_filename = "ExpectedOutput.npy"
+        parameters_filename = "ProjectParametersROM.json"
+        expected_output_filename = "ExpectedOutputROM.npy"
 
         time_snapshots = [2,4,6,8,10]
 

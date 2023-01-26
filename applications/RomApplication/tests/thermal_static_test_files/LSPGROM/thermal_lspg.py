@@ -14,31 +14,26 @@ import KratosMultiphysics.RomApplication.rom_testing_utilities as rom_testing_ut
 from  KratosMultiphysics.ConvectionDiffusionApplication.convection_diffusion_analysis import ConvectionDiffusionAnalysis
 import KratosMultiphysics.RomApplication.rom_testing_utilities as rom_testing_utilities
 
-class WriteResults(ConvectionDiffusionAnalysis):
-
-    def InitializeSolutionStep(self):
-        super().InitializeSolutionStep()
-        condition = 2000*float(self.time)
-        self.project_parameters["processes"]["constraints_process_list"][0]["Parameters"]["value"].SetDouble(condition)
-        debug = True
-
-    def FinalizeSolutionStep(self):
-        super().FinalizeSolutionStep()
-        # if self.write_flag:
-            # obtained_output = rom_testing_utilities.GetScalarNodalResults(simulation._GetSolver().GetComputingModelPart(), KratosMultiphysics.TEMPERATURE)
-            # np.save("ExpectedOutput.npy", obtained_output)
-        #     self.write_flag = False
-
 if __name__ == '__main__':
     work_folder = ""
-    parameters_filename = "ProjectParameters.json"
+    parameters_filename = "ProjectParametersLSPGROM.json"
 
     with KratosUnittest.WorkFolderScope(work_folder, __file__):
         # Set up simulation
         with open(parameters_filename,'r') as parameter_file:
             parameters = KratosMultiphysics.Parameters(parameter_file.read())
         model = KratosMultiphysics.Model()
-        simulation = rom_testing_utilities.SetUpSimulationInstance(model, parameters)
+        dummy = rom_testing_utilities.SetUpSimulationInstance(model, parameters)
+
+        class DummyAnalysis(type(dummy)):
+
+            def InitializeSolutionStep(cls):
+                super().InitializeSolutionStep()
+                # condition = 2000*float(cls.time)
+                # cls.project_parameters["processes"]["constraints_process_list"][0]["Parameters"]["value"].SetDouble(condition)
 
         # Run test case
-        simulation.Run()
+        dummy.Run()
+
+        obtained_output = rom_testing_utilities.GetScalarNodalResults(dummy._GetSolver().GetComputingModelPart(), KratosMultiphysics.TEMPERATURE)
+        np.save("ExpectedOutputLSPGROM.npy", obtained_output)

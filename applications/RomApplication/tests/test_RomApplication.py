@@ -15,6 +15,9 @@ from test_compressible_potiential_rom import TestCompressiblePotentialRom
 from test_fluid_lspg_rom import TestFluidLSPGRom
 from test_thermal_lspg_rom import TestThermalLSPGRom
 from test_structural_lspg_rom import TestStructuralLSPGRom
+from test_fluid_pg_rom import TestFluidPGRom
+from test_thermal_pg_rom import TestThermalPGRom
+from test_structural_pg_rom import TestStructuralPGRom
 
 def AssembleTestSuites():
     ''' Populates the test suites to run.
@@ -45,6 +48,9 @@ def AssembleTestSuites():
     smallSuite.addTests(KratosUnittest.TestLoader().loadTestsFromTestCases([TestFluidLSPGRom]))
     smallSuite.addTests(KratosUnittest.TestLoader().loadTestsFromTestCases([TestThermalLSPGRom]))
     smallSuite.addTests(KratosUnittest.TestLoader().loadTestsFromTestCases([TestStructuralLSPGRom]))
+    smallSuite.addTests(KratosUnittest.TestLoader().loadTestsFromTestCases([TestFluidPGRom]))
+    smallSuite.addTests(KratosUnittest.TestLoader().loadTestsFromTestCases([TestThermalPGRom]))
+    smallSuite.addTests(KratosUnittest.TestLoader().loadTestsFromTestCases([TestStructuralPGRom]))
 
 
     # Create a test suit that contains all the tests from every testCase

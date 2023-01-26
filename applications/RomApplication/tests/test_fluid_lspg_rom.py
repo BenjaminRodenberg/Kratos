@@ -23,8 +23,8 @@ class TestFluidLSPGRom(KratosUnittest.TestCase):
     @KratosUnittest.skipUnless(numpy_available, "numpy is required for RomApplication")
     def testFluidLSPGRom2D(self):
         self.work_folder = "fluid_dynamics_test_files/LSPGROM/"
-        parameters_filename = "ProjectParameters.json"
-        expected_output_filename = "ExpectedOutput.npy"
+        parameters_filename = "ProjectParametersLSPGROM.json"
+        expected_output_filename = "ExpectedOutputLSPGROM.npy"
 
         with KratosUnittest.WorkFolderScope(self.work_folder, __file__):
             # Set up simulation

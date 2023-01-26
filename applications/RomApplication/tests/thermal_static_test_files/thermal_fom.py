@@ -18,15 +18,15 @@ class WriteResults(ConvectionDiffusionAnalysis):
 
     def InitializeSolutionStep(self):
         super().InitializeSolutionStep()
-        condition = 2000*float(self.time)
-        self.project_parameters["processes"]["constraints_process_list"][0]["Parameters"]["value"].SetDouble(condition)
+        # condition = 2000*float(self.time)
+        # self.project_parameters["processes"]["constraints_process_list"][0]["Parameters"]["value"].SetDouble(condition)
         debug = True
 
-    def FinalizeSolutionStep(self):
-        super().FinalizeSolutionStep()
+    def Finalize(self):
+        super().Finalize()
         # if self.write_flag:
-            # obtained_output = rom_testing_utilities.GetScalarNodalResults(simulation._GetSolver().GetComputingModelPart(), KratosMultiphysics.TEMPERATURE)
-            # np.save("ExpectedOutput.npy", obtained_output)
+        #     obtained_output = rom_testing_utilities.GetScalarNodalResults(simulation._GetSolver().GetComputingModelPart(), KratosMultiphysics.TEMPERATURE)
+        #     np.save("ExpectedOutput.npy", obtained_output)
         #     self.write_flag = False
 
 if __name__ == '__main__':

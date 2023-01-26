@@ -693,6 +693,7 @@ protected:
         
         const auto solving_timer = BuiltinTimer();
         MathUtils<double>::Solve(rA, dxrom, rb);
+        // KRATOS_WATCH(dxrom)
         KRATOS_INFO_IF("ROMBuilderAndSolver", (this->GetEchoLevel() > 0)) << "Solve reduced system time: " << solving_timer.ElapsedSeconds() << std::endl;
 
         // Save the ROM solution increment in the root modelpart database
