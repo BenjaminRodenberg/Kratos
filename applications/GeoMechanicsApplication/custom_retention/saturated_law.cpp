@@ -68,33 +68,21 @@ double SaturatedLaw::
 double SaturatedLaw::
     CalculateEffectiveSaturation(Parameters &rParameters)
 {
-    KRATOS_TRY
-
     return 1.0;
-
-    KRATOS_CATCH("")
 }
 
 //-------------------------------------------------------------------------------------------------
 double SaturatedLaw::
     CalculateDerivativeOfSaturation(Parameters &rParameters)
 {
-    KRATOS_TRY
-
     return 0.0;
-
-    KRATOS_CATCH("")
 }
 
 //-------------------------------------------------------------------------------------------------
 double SaturatedLaw::
     CalculateRelativePermeability(Parameters &rParameters)
 {
-    KRATOS_TRY
-
     return 1.0;
-
-    KRATOS_CATCH("")
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -104,7 +92,7 @@ double SaturatedLaw::
     KRATOS_TRY
 
     return CalculateEffectiveSaturation(rParameters);
-
+    
     KRATOS_CATCH("")
 }
 
